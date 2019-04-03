@@ -18,9 +18,6 @@ class Breakout extends Phaser.Scene {
         //  Enable world bounds, but disable the floor
         this.physics.world.setBoundsCollision(true, true, true, false);
 
-        // Create local scoreboard
-        this.add.text(200, 200, 'Score:', {color: '#ffffff'});
-
         //  Create the bricks in a 10x6 grid
         this.bricks = this.physics.add.staticGroup({
             key: 'assets', frame: [ 'blue1', 'red1', 'green1', 'yellow1', 'silver1', 'purple1' ],
@@ -59,15 +56,23 @@ class Breakout extends Phaser.Scene {
             }
 
         }, this);
+
+        //Create local scoreboard
+        this.scoreText = this.add.text(200, 200, 'Score:', {color: '#ffffff'});
     }
 
     hitBrick(ball, brick) {
         brick.disableBody(true, true);
+        this.updateScore();
 
         if (this.bricks.countActive() === 0)
         {
             this.resetLevel();
         }
+    }
+
+    updateScore() {
+        this.score += 10;
     }
 
     resetBall() {
@@ -110,7 +115,7 @@ class Breakout extends Phaser.Scene {
     }
 
     update() {
-        // console.log('updating')
+        this.scoreText.setText(`Score: ${this.score}`)
         if (this.ball.y > 600)
         {
             this.resetBall();
